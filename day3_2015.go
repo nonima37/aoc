@@ -1,65 +1,44 @@
 package main
 
 import (
+	"aoc/functions"
 	"fmt"
 )
-
-var m = map[string]int{
-	"v": -1,
-	"^": 1,
-	">": 1,
-	"<": -1,
-}
 
 type cords struct {
 	x int
 	y int
 }
 
+var m = map[string]cords{
+	"v": cords{x: 0, y: -1},
+	"^": cords{x: 0, y: 1},
+	">": cords{x: 1, y: 0},
+	"<": cords{x: -1, y: 0},
+}
+
 func main() {
-	//input := functions.Read()
-	input := "^>v<"
-	curCordsSanta := cords{x: 0, y: 0}
-	curCordsRobo := cords{x: 0, y: 0}
+	input := functions.Read()
+	visitedCords := map[cords]bool{}
+	santaCord := cords{x: 0, y: 0}
+	robotCord := cords{x: 0, y: 0}
 
-	santaCords := map[cords]bool{}
-	roboCords := map[cords]bool{}
-	curMovement := "santa"
-
+	curCords := &santaCord
 	for i, v := range input {
+		fmt.Println(santaCord)
 		if i%2 == 0 {
-			curMovement = "santa"
+			curCords = &santaCord
 		} else {
-			curMovement = "robot"
+			curCords = &robotCord
 		}
 
-		if string(v) == "v" || string(v) == "^" {
-			if curMovement == "santa" {
-				curCordsSanta.y += m[string(v)]
-			} else {
-				curCordsRobo.y += m[string(v)]
-			}
-		} else {
-			if curMovement == "santa" {
-				curCordsSanta.x += m[string(v)]
-			} else {
-				curCordsRobo.x += m[string(v)]
-			}
-		}
+		curCords.x += m[string(v)].x
+		curCords.y += m[string(v)].y
+		_, ok := visitedCords[*curCords]
 
-		if curMovement == "santa" {
-			_, ok := santaCords[curCordsSanta]
-			_, ok2 := roboCords[curCordsSanta]
-			if !ok && !ok2 {
-				santaCords[curCordsSanta] = true
-			}
-		} else {
-			_, ok := roboCords[curCordsRobo]
-			_, ok2 := santaCords[curCordsRobo]
-			if !ok && !ok2 {
-				roboCords[curCordsRobo] = true
-			}
+		if !ok {
+			visitedCords[*curCords] = true
 		}
 	}
-	fmt.Println(len(santaCords) + len(roboCords))
+	fmt.Println(len(visitedCords))
 }
