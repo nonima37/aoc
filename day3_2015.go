@@ -22,22 +22,25 @@ func main() {
 	visitedCords := map[cords]bool{}
 	santaCord := cords{x: 0, y: 0}
 	robotCord := cords{x: 0, y: 0}
+	curCord := cords{x: 0, y: 0}
 
-	curCords := &santaCord
 	for i, v := range input {
-		fmt.Println(santaCord)
+		curCord = cords{x: m[string(v)].x, y: m[string(v)].y}
+		ok := true
 		if i%2 == 0 {
-			curCords = &santaCord
+			santaCord.x += curCord.x
+			santaCord.y += curCord.y
+			_, ok = visitedCords[santaCord]
+			if !ok {
+				visitedCords[santaCord] = true
+			}
 		} else {
-			curCords = &robotCord
-		}
-
-		curCords.x += m[string(v)].x
-		curCords.y += m[string(v)].y
-		_, ok := visitedCords[*curCords]
-
-		if !ok {
-			visitedCords[*curCords] = true
+			robotCord.x += curCord.x
+			robotCord.y += curCord.y
+			_, ok = visitedCords[robotCord]
+			if !ok {
+				visitedCords[robotCord] = true
+			}
 		}
 	}
 	fmt.Println(len(visitedCords))
