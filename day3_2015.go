@@ -2,7 +2,6 @@ package main
 
 import (
 	"aoc/functions"
-	"fmt"
 )
 
 type cords struct {
@@ -10,38 +9,27 @@ type cords struct {
 	y int
 }
 
-var m = map[string]cords{
-	"v": cords{x: 0, y: -1},
-	"^": cords{x: 0, y: 1},
-	">": cords{x: 1, y: 0},
-	"<": cords{x: -1, y: 0},
+var cordsMap = map[string]cords{
+	"v": {x: 0, y: -1},
+	"^": {x: 0, y: 1},
+	">": {x: 1, y: 0},
+	"<": {x: -1, y: 0},
 }
 
-func main() {
-	input := functions.Read()
-	visitedCords := map[cords]bool{}
-	santaCord := cords{x: 0, y: 0}
-	robotCord := cords{x: 0, y: 0}
-	curCord := cords{x: 0, y: 0}
+func day3RedoMain() int {
+	inputString := functions.Read()
+	visited := map[cords]bool{}
+	santaCurCords := cords{0, 0}
+	robotCurCords := cords{0, 0}
 
-	for i, v := range input {
-		curCord = cords{x: m[string(v)].x, y: m[string(v)].y}
-		ok := true
+	for i, v := range inputString {
 		if i%2 == 0 {
-			santaCord.x += curCord.x
-			santaCord.y += curCord.y
-			_, ok = visitedCords[santaCord]
-			if !ok {
-				visitedCords[santaCord] = true
-			}
+			santaCurCords = cords{x: santaCurCords.x + cordsMap[string(v)].x, y: santaCurCords.y + cordsMap[string(v)].y}
+			visited[santaCurCords] = true
 		} else {
-			robotCord.x += curCord.x
-			robotCord.y += curCord.y
-			_, ok = visitedCords[robotCord]
-			if !ok {
-				visitedCords[robotCord] = true
-			}
+			robotCurCords = cords{x: robotCurCords.x + cordsMap[string(v)].x, y: robotCurCords.y + cordsMap[string(v)].y}
+			visited[robotCurCords] = true
 		}
 	}
-	fmt.Println(len(visitedCords))
+	return len(visited)
 }

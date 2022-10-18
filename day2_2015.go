@@ -39,7 +39,7 @@ func minSides(arr []int) []int {
 	return res
 }
 
-func main() {
+func day2Main() {
 	inputString := strings.Split(functions.Read(), "\r\n")
 	var res1 int = 0
 	var res2 int = 0
